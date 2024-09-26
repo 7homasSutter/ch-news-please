@@ -475,6 +475,8 @@ class PostgresqlStorage(ExtractedInformationStorage):
             self.log.info("Article inserted into the database.")
         except psycopg2.DatabaseError as error:
             self.log.error("Something went wrong in commit: %s", error)
+            self.conn.rollback()  # New
+            return
 
         # Move the old version from the CurrentVersion table to the ArchiveVersions table
         if old_version is not None:

@@ -49,6 +49,5 @@ CREATE TABLE CurrentVersions (
   language varchar(255),
   ancestor int NOT NULL DEFAULT 0,
   descendant int NOT NULL DEFAULT 0,
-  version int NOT NULL DEFAULT 1,
-  CONSTRAINT unique_url UNIQUE(url)
+  version int NOT NULL DEFAULT 1
 );

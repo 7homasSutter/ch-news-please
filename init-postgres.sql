@@ -28,7 +28,6 @@ CREATE TABLE ArchiveVersions (
 --
 -- Table structure for table CurrentVersions
 --
-
 DROP TABLE IF EXISTS CurrentVersions;
 CREATE TABLE CurrentVersions (
   id SERIAL PRIMARY KEY,
