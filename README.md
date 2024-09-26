@@ -2,7 +2,7 @@
 
 
 ## Project Description
-In this project, we are building a web crawler that crawls the website of the Swiss news portals. We then use the 
+In this project, we are using a web crawler that crawls the website of the Swiss news portals. We then use the 
 data to build a news analysis system. The project is divided into two parts:
 1. The crawler: The crawler is responsible for crawling the website of the Swiss news portals and extracting the data.
 2. The analysis system: The analysis system is responsible for analyzing the data and providing insights.
