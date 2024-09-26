@@ -18,5 +18,5 @@ To run the project, follow these steps:
 3. Run `docker-compose up` in the root directory of the project
 
 The crawler will start crawling the website and will write the data to the database and the local 
-directories `news_data`.
+directory `news_data`.
 
