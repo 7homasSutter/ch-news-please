@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>All sources</title>
+</head>
+<body>
+<h1>Available Newspapers</h1>
+<div class="list-container">
+    {% for source in sources%}
+    <a href="/{{source}}">
+        <div class="list-row">{{source}}</div>
+    </a>
+    {% endfor %}
+</div>
+
+</body>
+</html>

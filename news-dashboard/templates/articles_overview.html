@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>Articles by {{source}}</title>
+</head>
+<body>
+<h1>Articles of {{source}}</h1>
+<a class="button" href="/">go back to overview</a>
+<div class="list-container">
+    {% for article in articles%}
+    <div class="list-row">
+        <a href="/{{source}}/{{article.id}}">
+        <div class="row-container">
+            <div>{{article.title}}</div>
+            <div>{{article.date_publish}}</div>
+        </div>
+        </a>
+    </div>
+    {% endfor %}
+
+</div>
+</div>
+</body>
+</html>

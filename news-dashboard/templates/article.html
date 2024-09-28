@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="UTF-8">
+    <title>{{article.title}}</title>
+</head>
+<body>
+<div>
+    <h1>{{article.title}}</h1>
+    <a class="button" href="/{{article.source_domain}}">go back to overview</a>
+</div>
+<img class="article-image" src="{{article.image_url}}" alt="image"/>
+<p class="article-text">{{article.maintext}}</p>
+
+</body>
+</html>
