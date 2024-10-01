@@ -5,8 +5,8 @@
   # The same URL in combination with the same crawler may only appear once in this array.
   "base_urls" : [
     {
-      "url": "https://www.polizeinews.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.polizeinews.ch/",
+      "additional_rss_daemon": 3600,
     },
     {
       "url": "https://www.srf.ch/news",
