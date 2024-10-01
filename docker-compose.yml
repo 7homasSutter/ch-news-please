@@ -31,7 +31,7 @@ services:
       - ./db_data/news_data:/root/news-please-repo/data
     networks:
       - backend
-    #restart: always
+    restart: always
 
 networks:
   backend:
