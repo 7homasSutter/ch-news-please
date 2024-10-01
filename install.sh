@@ -1,7 +1,7 @@
 #!/bin/sh
 
-mkdir ./db_data
-mkdir ./news_data
+mkdir -p ./db_data/postgres/
+mkdir -p ./db_data/news_data/
 touch .env
 echo "DB_PASSWORD=chnewsplease" >> .env
 echo "DB_USER=chnewsplease" >> .env

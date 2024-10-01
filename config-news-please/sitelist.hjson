@@ -9,40 +9,49 @@
       "additional_rss_daemon": 3600
     },
     {
-      "url": "https://www.srf.ch/news"
-      "additional_rss_daemon": 3600
+      "url": "https://www.srf.ch/news",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.20min.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.20min.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.woz.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.woz.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.nzz.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.nzz.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.tagblatt.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.tagblatt.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.blick.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.blick.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.tagesanzeiger.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.tagesanzeiger.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.handelszeitung.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.handelszeitung.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     },
     {
-      "url": "https://www.bernerzeitung.ch/"
-      "additional_rss_daemon": 3600
+      "url": "https://www.bernerzeitung.ch/",
+      "additional_rss_daemon": 3600,
+      "pass_heuristics_condition": "is_not_from_subdomain"
     }
   ]
 }

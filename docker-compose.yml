@@ -13,7 +13,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - ./db_data/postgresql:/var/lib/postgresql/data
       - ./init-postgres.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
@@ -28,7 +28,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./news_data:/root/news-please-repo/data
+      - ./db_data/news_data:/root/news-please-repo/data
     networks:
       - backend
     #restart: always
