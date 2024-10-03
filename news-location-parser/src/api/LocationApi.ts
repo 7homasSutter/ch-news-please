@@ -34,7 +34,7 @@ export async function addVillages(ctx: Context) {
     addLocationDirectory(ctx, handleDirectoryUpload, Village.get()).then()
 }
 
-export async function checkForLocations(ctx: Context) {
+export async function parseToLocation(ctx: Context) {
     // @ts-ignore
     const body = ctx.request.body
     const foundLocations = await findLocationsInText(body.text)

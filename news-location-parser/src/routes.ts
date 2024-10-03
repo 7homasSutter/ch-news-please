@@ -4,7 +4,7 @@ import {
     addMunicipalities,
     addStreets,
     addVillages,
-    checkForLocations,
+    parseToLocation,
     debugMethod, deleteAll,
     municipalityExists, streetExists, villageExists
 } from "./api/LocationApi";
@@ -22,6 +22,6 @@ router.get('/location/municipalities/:name', municipalityExists)
 router.get('/location/villages/:name', villageExists)
 router.get('/location/streets/:name', streetExists)
 
-router.post('/location', checkForLocations)
+router.post('/location', parseToLocation)
 router.delete('/location', deleteAll)
 router.get("/", debugMethod)
