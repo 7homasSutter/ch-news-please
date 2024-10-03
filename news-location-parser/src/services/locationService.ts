@@ -15,19 +15,22 @@ export async function handleDirectoryUpload(locationType: LocationType, bufferDa
         return false
     }
 
-    saveFileContentToRedis(saveAs, locationType).then(() => {
-        console.log(`added ${locationType.getName()} to redis!`)
+    saveFileContentToRedis(saveAs, locationType).then((numberElementsAdded: number) => {
+        console.log(`added ${numberElementsAdded} ${locationType.getName()} to redis!`)
+    }).catch(error =>{
+        console.log(error)
     })
     return true
 }
 
-async function saveFileContentToRedis(filePath: string, locationType: LocationType) {
+async function saveFileContentToRedis(filePath: string, locationType: LocationType): Promise<number> {
     const fileStream = fs.createReadStream(filePath)
     const rl = readline.createInterface({
         input: fileStream,
         crlfDelay: Infinity,
     })
     let isHeader = true
+    let counter = 0
     for await (const data of rl) {
         if (isHeader) {
             isHeader = false
@@ -35,11 +38,15 @@ async function saveFileContentToRedis(filePath: string, locationType: LocationTy
         }
         const row = data.split(";")
         const value: LocationValue = locationType.rowParser(row).value
-
         // we want to have a lookup table with keys consisting of only one word keys
         // (if it's not a multiWord Location, mostSignificant.key is equals to key)
         await saveKeyValue(locationType.getName(), value.mostSignificant.key, JSON.stringify(value))
+        counter++
+        if(counter % 5000 === 0){
+            console.log("added", counter, locationType.getName() ,'...')
+        }
     }
+    return counter
 }
 
 export async function findLocationsInText(text: string): Promise<InterpretedLocation[]> {

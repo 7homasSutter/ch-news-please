@@ -66,7 +66,7 @@ export class Street extends LocationType {
             mostSignificant: this.mostSignificantWordPart(key),
             canton: row[5],
             municipality: row[4],
-            village: row[3].replace(/\d{4}/g, '').trim(),
+            village: row[2].substring(4).trim(), //remove zip code
             east: row[10],
             north: row[11]
         }

@@ -20,5 +20,11 @@ export async function getValue(category: string, key: string): Promise<string[]>
 }
 
 export async function deleteAllRedisData(): Promise<string>{
-    return await redis_client.flushDb()
+    try{
+        return await redis_client.flushDb()
+    } catch (error){
+        console.log("ERROR: ", error)
+        return error
+    }
+
 }

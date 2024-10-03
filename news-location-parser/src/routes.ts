@@ -6,7 +6,7 @@ import {
     addVillages,
     checkForLocations,
     debugMethod, deleteAll,
-    municipalityExists
+    municipalityExists, streetExists, villageExists
 } from "./api/LocationApi";
 import {Municipality, Street, Village} from "./model/locationType";
 
@@ -18,7 +18,10 @@ console.log(Municipality.id)
 router.post('/location/municipalities', upload.single(Municipality.id), addMunicipalities)
 router.post('/location/streets', upload.single(Street.id), addStreets)
 router.post('/location/villages', upload.single(Village.id), addVillages)
-router.get('/location/municipalities/:municipality', municipalityExists)
+router.get('/location/municipalities/:name', municipalityExists)
+router.get('/location/villages/:name', villageExists)
+router.get('/location/streets/:name', streetExists)
+
 router.post('/location', checkForLocations)
 router.delete('/location', deleteAll)
 router.get("/", debugMethod)

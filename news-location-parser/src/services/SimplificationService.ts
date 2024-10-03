@@ -1,25 +1,9 @@
-import {
-    InterpretedLocation,
-    LocationMultiWord,
-    LocationValue,
-    ScoredLocation,
-    Word
-} from "../../types/types";
+import {InterpretedLocation, LocationMultiWord, LocationValue, ScoredLocation, Word} from "../../types/types";
 import {removePunctuation} from "./utils";
 import {LocationType, Municipality, Street, Village} from "../model/locationType";
+import {BLANK, emergencyServices} from "../constants";
 
 export function simplifyLocationFindings(text: string, locations: InterpretedLocation[]): ScoredLocation[] {
-
-    const allPossibleLocations: { [locationType: string]: string[] } = getAllPossibleLocations(locations)
-
-    return locations
-        .map((location: InterpretedLocation) => filterInvalidMultiWordLocations(text, location))
-        .map((location: InterpretedLocation) => removeUnlikelyStreets(location, allPossibleLocations))
-        .filter(hasNoLocations)
-        .map(reduceToSingleLocation)
-        .map(mapToScoredLocation)
-
-    //return removeInvalidStreets(locations)
 
     // map to a much simpler version: we want only one location per word.
     //
@@ -28,6 +12,29 @@ export function simplifyLocationFindings(text: string, locations: InterpretedLoc
     //  - if it has a single village -> we say it's a village
     //  - if it has a street -> it's probably a street
     //  - if it has a street but no corresponding village/municipality -> it's probably not the street we're searching for
+
+    return locations
+        .map((location: InterpretedLocation) => removeInvalidMultiWordLocations(text, location))
+        .map((location: InterpretedLocation) => removeLocationsWithEmergencyServicePrefix(text, location))
+        .map((location: InterpretedLocation) => removeUnlikelyStreets(location, getAllPossibleLocations(locations)))
+        .filter(hasNoLocations)
+        .map(reduceToSingleLocation)
+        .map(mapToScoredLocation)
+}
+
+function removeLocationsWithEmergencyServicePrefix(text: string, location: InterpretedLocation){
+    //"Die Kantonspolizei Zürich rückte aus." => 'Zürich' is probably not our searched location
+    if (location.position === 0) {
+        return location
+    }
+
+    for(const locationType of Object.keys(location.results)){
+        location.results[locationType] = location.results[locationType].filter((possibleLocation: LocationValue) => {
+            const wordBefore = text.split(BLANK)[prevWordPosition(possibleLocation, location.position)]
+            return !emergencyServices.includes(wordBefore)
+        })
+    }
+    return location
 }
 
 function removeUnlikelyStreets(location: InterpretedLocation, allPossibleLocations: {
@@ -36,10 +43,9 @@ function removeUnlikelyStreets(location: InterpretedLocation, allPossibleLocatio
     // if we have found a street but not the corresponding village/municipality, it's probably the wrong street -> we remove this street
     // no need to remove unlikely villages/municipalities since if we have a street, we ignore villages/municipalities anyway (see #reduceToSingleLocations)
     const streets = location.results[Street.id]
-    const results = streets.filter((street: LocationValue) => {
+    location.results[Street.id] = streets.filter((street: LocationValue) => {
         return allPossibleLocations[Village.id].includes(street.village) || allPossibleLocations[Municipality.id].includes(street.municipality)
     })
-    location.results[Street.id] = results
     return location
 }
 
@@ -65,7 +71,7 @@ function reduceToSingleLocation(word: InterpretedLocation): InterpretedLocation 
     return word
 }
 
-function filterInvalidMultiWordLocations(text: string, word: InterpretedLocation): InterpretedLocation {
+function removeInvalidMultiWordLocations(text: string, word: InterpretedLocation): InterpretedLocation {
     for (const key of Object.keys(word.results)) {
         word.results[key] = word.results[key].filter((location: LocationValue) => {
             return !location.isMultiWord || textIncludesMultiWordLocation(text, word.position, location.mostSignificant)
@@ -86,7 +92,7 @@ function textIncludesMultiWordLocation(text: string, position: number, multiWord
     const absolutStart = position - multiWordInfo.numberBefore
     const absolutEnd = position + multiWordInfo.numberAfter
     const allWords = text
-        .split(" ")
+        .split(BLANK)
         .map(removePunctuation)
     const fullWord = allWords.slice(absolutStart /*inclusive*/, absolutEnd + 1/*exclusive*/).join(" ")
     return fullWord === multiWordInfo.fullName
@@ -121,3 +127,7 @@ function getAllPossibleLocations(locations: InterpretedLocation[]): { [locationT
     return result
 }
 
+function prevWordPosition(location: LocationValue, position: number): number{
+    const pos = position - location.mostSignificant.numberBefore - 1
+    return pos >= 0 ? pos : 0
+}

@@ -42,16 +42,27 @@ export async function checkForLocations(ctx: Context) {
     const scoredLocations = evaluateLocations(simplifiedLocations, body.text)
 
     ctx.body = scoredLocations
-
 }
 
 export async function municipalityExists(ctx: Context) {
-    const municipality = ctx.params.municipality;
-    const result = await getValue(Municipality.id, municipality)
-    if (result !== null) {
-        ctx.body = `${municipality} exists.`
-    } else {
-        ctx.body = `${municipality} doesn't exists.`
+    await locationExists(ctx, Municipality.get())
+}
+
+export async function villageExists(ctx: Context) {
+    await locationExists(ctx, Village.get())
+}
+
+export async function streetExists(ctx: Context) {
+    await locationExists(ctx, Street.get())
+}
+
+export async function locationExists(ctx: Context, locationType: LocationType): Promise<void>{
+    const location = ctx.params.name
+    const result = await getValue(locationType.getName(), location)
+    if(result === null){
+        ctx.body = `${location} doesn't exist.`
+    }else{
+        ctx.body = `${location} exists.`
     }
 }
 

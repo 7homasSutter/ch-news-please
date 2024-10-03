@@ -1,15 +1,7 @@
 import {ScoredLocation, SimpleLocation} from "../../types/types";
 import {Street} from "../model/locationType";
+import {cantons, emergencyServices} from "../constants";
 
-const cantons = [
-    "AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR",
-    "JU", "LU", "NE", "NW", "OW", "SG", "SH", "SO", "SZ", "TG",
-    "TI", "UR", "VD", "VS", "ZG", "ZH"
-];
-
-const emergencyServices = [
-    "Polizei", "Feuerwehr", "Rettung", "Kantonspolizei", "Stadtpolizei", "Rettungsdienst"
-]
 
 
 export function evaluateLocations(locations: ScoredLocation[], text: string): SimpleLocation {
@@ -21,11 +13,11 @@ export function evaluateLocations(locations: ScoredLocation[], text: string): Si
         .map(plusForLowPosition)
         .map(evaluateStreets)
         .map((location: ScoredLocation) => plusForOptionalCantonAbb(location, text))
-        .map((location: ScoredLocation) => minusForEmergencyServicePrefix(location, text))
 
     let maxScore = -Infinity
     let selectedLocation: ScoredLocation = scored[0]
     scored.forEach((location: ScoredLocation) => {
+        console.log(location.value, location.score)
         if (location.score > maxScore) {
             maxScore = location.score
             selectedLocation = location
@@ -72,17 +64,6 @@ function evaluateStreets(location: ScoredLocation): ScoredLocation {
     return location
 }
 
-function minusForEmergencyServicePrefix(location: ScoredLocation, text: string): ScoredLocation {
-    if (location.position <= 1) {
-        return location
-    }
-    const wordBefore = text.split(" ")[prevWordPosition(location)]
-
-    if (emergencyServices.includes(wordBefore)) {
-        location.score -= 20
-    }
-    return location
-}
 
 function mapToSimpleLocation(scoredLocation: ScoredLocation): SimpleLocation {
 
@@ -102,7 +83,6 @@ function mapToSimpleLocation(scoredLocation: ScoredLocation): SimpleLocation {
     }
 
 }
-
 function nextWordPosition(location: ScoredLocation): number{
     return  location.position + location.details.mostSignificant.numberAfter + 1
 }
@@ -110,6 +90,7 @@ function nextWordPosition(location: ScoredLocation): number{
 function prevWordPosition(location: ScoredLocation): number{
     return  location.position - location.details.mostSignificant.numberBefore - 1
 }
+
 
 /*
 
