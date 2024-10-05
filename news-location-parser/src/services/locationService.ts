@@ -4,23 +4,36 @@ import fs from 'fs';
 import {InterpretedLocation, LocationValue, Word} from "../../types/types"
 
 import {removePunctuation, saveFile, wordStartsWithCapitalLetter} from "./utils";
-import {getValue, saveKeyValue} from "./redisService";
+import {deleteAllRedisData, getValue, saveKeyValue} from "./redisService";
 import {LocationType, Municipality, Street, Village} from "../model/locationType";
 import * as readline from "node:readline";
+import {getOrCreateBasePathForLocationData} from "../config";
 
 export async function handleDirectoryUpload(locationType: LocationType, bufferData: Buffer,) {
-    const saveAs = path.join(__dirname, '..', '..', 'data', `${locationType.getName()}.csv`)
+    const saveAs = path.join(getOrCreateBasePathForLocationData(), `${locationType.getName()}.csv`)
     const success = saveFile(saveAs, bufferData)
     if (!success) {
         return false
     }
-
-    saveFileContentToRedis(saveAs, locationType).then((numberElementsAdded: number) => {
-        console.log(`added ${numberElementsAdded} ${locationType.getName()} to redis!`)
-    }).catch(error =>{
-        console.log(error)
-    })
+    resetRedisAndLoadDataFromFiles([locationType]).then()
     return true
+}
+
+export async function resetRedisAndLoadDataFromFiles(locationTypes: LocationType[]){
+    await deleteAllRedisData()
+    for(const locationType of locationTypes){
+
+        const saveAs = path.join(getOrCreateBasePathForLocationData(), `${locationType.getName()}.csv`)
+        if(!fs.existsSync(saveAs)){
+            console.log("Error: The file", saveAs,` doesn't exist. To add this file, use POST /location/${locationType.getName()}`)
+            continue
+        }
+        saveFileContentToRedis(saveAs, locationType).then((numberElementsAdded: number) => {
+            console.log(`Reloading ${locationType.getName()} completed: added ${numberElementsAdded} ${locationType.getName()} to redis!`)
+        }).catch(error =>{
+            console.log(error)
+        })
+    }
 }
 
 async function saveFileContentToRedis(filePath: string, locationType: LocationType): Promise<number> {
@@ -42,7 +55,7 @@ async function saveFileContentToRedis(filePath: string, locationType: LocationTy
         // (if it's not a multiWord Location, mostSignificant.key is equals to key)
         await saveKeyValue(locationType.getName(), value.mostSignificant.key, JSON.stringify(value))
         counter++
-        if(counter % 5000 === 0){
+        if(counter % 10000 === 0){
             console.log("added", counter, locationType.getName() ,'...')
         }
     }

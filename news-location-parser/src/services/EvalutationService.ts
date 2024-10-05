@@ -1,6 +1,6 @@
 import {ScoredLocation, SimpleLocation} from "../../types/types";
 import {Street} from "../model/locationType";
-import {cantons, emergencyServices} from "../constants";
+import {cantons} from "../constants";
 
 
 
@@ -17,7 +17,7 @@ export function evaluateLocations(locations: ScoredLocation[], text: string): Si
     let maxScore = -Infinity
     let selectedLocation: ScoredLocation = scored[0]
     scored.forEach((location: ScoredLocation) => {
-        console.log(location.value, location.score)
+        console.log("Location:", location.value, ", Score:",  location.score)
         if (location.score > maxScore) {
             maxScore = location.score
             selectedLocation = location
@@ -90,50 +90,3 @@ function nextWordPosition(location: ScoredLocation): number{
 function prevWordPosition(location: ScoredLocation): number{
     return  location.position - location.details.mostSignificant.numberBefore - 1
 }
-
-
-/*
-
-class Analyzer{
-    private text: string
-    private collectedMunicipalities: ScoredLocation[]
-    private collectedStreets: ScoredLocation[]
-
-    constructor(text: string, municipalities: Word[], streets: Word[]) {
-        this.collectedMunicipalities = municipalities.map(word => ({...word, score: 0 }))
-        this.collectedStreets = streets.map(word => ({...word, score: 0 }))
-        this.text = text
-    }
-
-    plusForLowPosition(municipality: ScoredLocation): ScoredLocation{
-        if(municipality.position < 20){
-            municipality.score += 10
-        }
-        return municipality
-    }
-
-    plusForCantonAbb(municipality: ScoredLocation): ScoredLocation{
-        const cantonAbb = this.text[municipality.position+1]
-        if(cantons.includes(cantonAbb)){
-            municipality.score += 10
-        }
-        return municipality
-    }
-
-    minusForEmergencyServices(municipality: ScoredLocation): ScoredLocation{
-        if(municipality.position <=1){
-            return municipality
-        }
-        const wordBefore = this.text[municipality.position-1]
-        if(emergencyServices.includes(wordBefore)){
-            municipality.score -= 20
-        }
-        return municipality
-    }
-
-    useRule(){
-
-    }
-
-}
-*/

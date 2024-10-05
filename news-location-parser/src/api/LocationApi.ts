@@ -1,7 +1,7 @@
 import {Context} from "koa";
 import {deleteAllRedisData, getValue} from "../services/redisService";
 import {LocationType, Municipality, Street, Village} from "../model/locationType";
-import {findLocationsInText, handleDirectoryUpload} from "../services/locationService";
+import {findLocationsInText, handleDirectoryUpload, resetRedisAndLoadDataFromFiles} from "../services/locationService";
 import {simplifyLocationFindings} from "../services/SimplificationService";
 import {evaluateLocations} from "../services/EvalutationService";
 
@@ -32,6 +32,11 @@ export async function addStreets(ctx: Context) {
 
 export async function addVillages(ctx: Context) {
     addLocationDirectory(ctx, handleDirectoryUpload, Village.get()).then()
+}
+
+export async function reloadLocations(ctx: Context){
+    resetRedisAndLoadDataFromFiles([Municipality.get(), Village.get(), Street.get()]).then()
+    ctx.body = "This operation could take a while. Check the logs for progress."
 }
 
 export async function parseToLocation(ctx: Context) {

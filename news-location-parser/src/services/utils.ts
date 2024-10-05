@@ -21,3 +21,9 @@ export function removePunctuation(word: string): string {
     word = word.replace(punctuation, "")
     return word
 }
+
+export function sleep(ms: number){
+    return new Promise((resolve) => {
+        setTimeout(resolve, ms)
+    });
+}

@@ -1,5 +1,7 @@
 import { createClient } from 'redis';
 import dotenv from 'dotenv';
+import path from "path";
+import fs from "fs";
 
 dotenv.config();
 
@@ -11,4 +13,10 @@ export const redis_client = createClient({
     }
 });
 
-
+export const getOrCreateBasePathForLocationData = (): string => {
+    const dir = path.join(__dirname, '..', '..', 'data')
+    if(!fs.existsSync(dir)){
+        fs.mkdirSync(dir, {recursive: true})
+    }
+    return dir
+}

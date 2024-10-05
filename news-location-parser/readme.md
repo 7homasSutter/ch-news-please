@@ -1,18 +1,28 @@
 # Location Parser
 
 Parses an article from `polizeinews.ch` (or other news portals) to a single location.
+This service runs on port `3000`.
 
-## API
-more detailed documentation will follow later...
+The parser uses the the official directories of Swisstopo to analyze if a given word is a town/commune/street.
+The directories can be found here:
+- Commune Register: https://www.bfs.admin.ch/bfs/en/home/basics/swiss-official-commune-register.html
+- Directory of towns and cities: https://www.swisstopo.admin.ch/en/official-directory-of-towns-and-cities
+- Street directory: https://www.swisstopo.admin.ch/en/official-street-directory
 
-- POST `/location/municipalities`: Add list of municipalities
-- POST `/location/villages`: Add list of villages
-- POST `/location/streets`: Add list of streets
-- POST `/location`: {text: string} Parses given text to a single location
-- DELETE `/location`: deletes all saved data; Push lists of municipalities/villages/streets again
+To load this data into the application, you can
+- copy the csv data into the directory /news-location-parser/data and rename the files to `municipalities.csv`, `villages.csv`
+and `streets.csv` and call `GET /location/reload` afterward, or
+- use the endpoints POST `/location/municipality`, `/location/villages` and `/location/streets` respectively to upload the files.  
 
-## Installation
+The endpoint `POST /location` allows an article to be uploaded as a JSON document: `{text: <your-article>}`.
+the answer has the following structure
+```js
+{
+  "name": string,
+  "locationType": "municipalities" | "villages" | "streets",
+  "type": "coordinates" | string,
+  "value": {east: string, north: string} | string
+}
+```
 
-With docker compose as soon it's dockerized...
 
-Needed directories and env-variables are added in `install.sh` file
