@@ -1,0 +1,13 @@
+.leaflet-container {
+  height: 100vh;
+  width: 100%;
+}
+
+.header{
+  z-index: 1000;
+  position: fixed;
+  bottom: 0;
+  height: 150px;
+  background-color: transparent;
+  pointer-events: none;
+}

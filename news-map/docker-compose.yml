@@ -1,0 +1,9 @@
+version: "3"
+services:
+  news-map:
+    build: .
+    container_name: "news-map"
+    ports:
+      - "3000:3000"
+
+
