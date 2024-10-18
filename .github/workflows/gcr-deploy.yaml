@@ -3,8 +3,8 @@
 name: Build and Deploy to Cloud Run
 on:
   push:
-    paths:
-      - 'news-map/**'
+    # paths:
+    #   - 'news-map/**'
 
 env:
   PROJECT_ID: news-map-ebd25
