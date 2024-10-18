@@ -73,3 +73,11 @@ jobs:
           service: ${{env.SERVICE}}
           region: ${{env.REGION_SERVICE}}
           image: ${{env.REGION_REPO}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.ARTIFACT_NAME}}:${{ steps.get-tag.outputs.short_ref }}
+
+        # Allow unauthenticated access to the service
+      - name: Allow Unauthenticated Access
+        run: |
+          gcloud run services add-iam-policy-binding ${{env.SERVICE}} \
+          --region ${{env.REGION_SERVICE}} \
+          --member="allUsers" \
+          --role="roles/run.invoker"
