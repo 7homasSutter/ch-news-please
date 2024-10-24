@@ -3,11 +3,31 @@
   width: 100%;
 }
 
-.header{
+.footer{
   z-index: 1000;
   position: fixed;
   bottom: 0;
-  height: 150px;
+  height: 200px;
   background-color: transparent;
   pointer-events: none;
+}
+
+.sideOverlay {
+  z-index: 1000;
+  pointer-events: none;
+  background-color: rgba(241,239,239, 0.8);
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  bottom: 250px;
+  width: 30vw;
+}
+
+.sideOverlayScrollArea {
+  pointer-events: all;
+  position: fixed;
+  overflow: scroll;
+  top: 60px;
+  bottom: 250px;
+  max-width: 28vw;
 }

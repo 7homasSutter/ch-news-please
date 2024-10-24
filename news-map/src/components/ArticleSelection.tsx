@@ -60,14 +60,16 @@ export function ArticleSelection({data, selectedArticle, notifyParentOnArticleSe
 
 
     return (
-        <div className={"header"} style={{width: '100%', paddingBottom: 20}}>
+        <div className={"footer"} style={{width: '100%', paddingBottom: 30}}>
             <Carousel
                 //onSlideChange={(index: number) => onChange(index, articleRef )}
                 getEmblaApi={setEmbla}
                 withIndicators={false}
                 withControls={false}
-                slideSize={{ base: '50%', sm: '33.33%', md: '10%' }}
+                slideSize={{ base: '10%'}}
+                slideGap={"sm"}
                 align='center'
+
             >
                 {articles.map((article: Article, index: number) => (
                     <Carousel.Slide key={index} onClick={() => selectArticle(article, true)}>
@@ -97,11 +99,13 @@ function Box({article, isActive}: BoxProps) {
                 alignItems: 'center',
                 textAlign: 'center',
                 margin: 5,
+                padding: 5,
                 cursor: 'pointer',
-                height: '8vw',
+                height: '200px',
                 width: '30vh',
                 boxShadow: isActive? 'rgba(240,0,0,0.2) 0 0 20px 10px' : "",
-                pointerEvents: 'all'
+                pointerEvents: 'all',
+                userSelect: 'none'
 
             }}>
             <div style={{fontWeight: 800}}>{article.title}</div>
