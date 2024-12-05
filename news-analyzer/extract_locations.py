@@ -1,6 +1,10 @@
 import argparse
 import logging
 import time
+import os
+import requests
+from dotenv import load_dotenv
+import json
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from sqlalchemy import create_engine, Table, Column, Integer, Text, MetaData
 import pandas as pd
@@ -50,7 +54,8 @@ def process_row(row, connection, max_retries=1, retry_delay=1):
         return has_error
     while retries < max_retries:
         try:
-            insert_stmt = keywords_table.insert().values(document_id=row['id'], keywords=keywords)
+            geo_location = fetch_geolocation(keywords)
+            insert_stmt = keywords_table.insert().values(document_id=row['id'], keywords=keywords, geo=geo_location)
             connection.execute(insert_stmt)
             connection.commit()
             break
@@ -70,7 +75,37 @@ def process_row(row, connection, max_retries=1, retry_delay=1):
                 logging.error(f"Max retries reached for row {row['id']}. Skipping.")
     return has_error
 
+
+def fetch_geolocation(keywords):
+    keywords = keywords.split(",")
+    unknown = ['Unknown', 'Undefined', 'Uncertain', 'Unclear', 'None', 'N/A', 'null','']
+    keywords = [location for location in keywords if location not in unknown]
+    if len(keywords) == 0:
+        return
+
+    api_key = os.getenv("GOOGLE_API_KEY")
+    if not api_key:
+        print("Error: Missing GOOGLE_API_KEY env variable")
+        return
+    url = "https://maps.googleapis.com/maps/api/geocode/json"
+    params = {
+        "address": keywords,
+        "key": api_key
+    }
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+        if data['status'] == 'OK':
+            location = data['results'][0]['geometry']['location']
+            return json.dumps(location)
+    except requests.exceptions.RequestException as e:
+        print("Error making the api request:", e)
+        return
+
+
 def main():
+    load_dotenv()
     parser = argparse.ArgumentParser(description='Extract keywords from documents and store them in a database.')
     parser.add_argument('--host', type=str, required=True, help='Database host')
     parser.add_argument('--port', type=str, required=True, help='Database port')
@@ -90,7 +125,8 @@ def main():
     keywords_table = Table('keywords', metadata,
         Column('id', Integer, primary_key=True),
         Column('document_id', Integer),
-        Column('keywords', Text)
+        Column('keywords', Text),
+        Column('geo', Text)
     )
 
     batch_size = args.batch_size
