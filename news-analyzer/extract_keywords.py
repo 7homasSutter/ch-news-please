@@ -11,7 +11,7 @@ from tqdm import tqdm
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Function to extract keywords using llama3.2
-def extract_keywords(doc, max_length=1000, max_retries=3, retry_delay=5):
+def extract_keywords(doc, max_length=5000, max_retries=1, retry_delay=1):
     if len(doc) > max_length:
         doc = doc[:max_length]
 
