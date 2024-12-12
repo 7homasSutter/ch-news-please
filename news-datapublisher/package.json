@@ -1,0 +1,21 @@
+{
+  "name": "news-datapublisher",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.0",
+    "@koa/cors": "^5.0.0",
+    "axios": "^1.7.9",
+    "firebase-admin": "^13.0.1",
+    "koa": "^2.15.3",
+    "koa-router": "^13.0.1",
+    "pg": "^8.13.1"
+  }
+}
