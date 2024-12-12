@@ -9,7 +9,6 @@
   bottom: 0;
   height: 200px;
   background-color: transparent;
-  pointer-events: none;
 }
 
 .sideOverlay {
@@ -30,4 +29,39 @@
   top: 60px;
   bottom: 250px;
   max-width: 28vw;
+}
+
+.topOverlayFilterPanel {
+  pointer-events: all;
+  position: fixed;
+  top: -10px;
+  left: 50%;
+  z-index: 1000;
+  background-color: rgba(241,239,239, 0.8);
+  cursor: pointer;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 15px;
+
+}
+
+.filterSettings {
+  z-index: 1000;
+  position: fixed;
+  top: 10px;
+  left: 0;
+
+}
+
+
+.hoverable {
+  display: inline-block; /* Adjust to your layout needs */
+  cursor: pointer; /* Change cursor to indicate clickability */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth animation */
+}
+
+.hoverable:hover {
+  transform: scale(1.1); /* Increases size by 10% */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adds a shadow for emphasis */
 }

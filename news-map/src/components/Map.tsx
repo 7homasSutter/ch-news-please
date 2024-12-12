@@ -14,17 +14,22 @@ interface MapProps {
 }
 
 function NewsMap({articles, selectedMarker, notifyParentOnMarkerSelection, onMapSectionChanged}: MapProps) {
-
+    const [allArticles, setAlLArticles] = useState<Article[]>(articles)
     const [visibleArticles, setVisibleArticles] = useState<Article[]>([]);
-    const [activeMarker, setActiveMarker] = useState<Article|undefined>(selectedMarker)
+    const [activeMarker, setActiveMarker] = useState<Article | undefined>(selectedMarker)
 
     const map = useMap()
 
     useEffect(() => {
-        if (!map) {
+        if (articles.length === 0) {
             return
         }
+        setAlLArticles(articles)
         updateVisibleMarkers()
+
+        if(!map){
+            return
+        }
 
         map.on('move', function () {
             updateVisibleMarkers()
@@ -33,19 +38,20 @@ function NewsMap({articles, selectedMarker, notifyParentOnMarkerSelection, onMap
             updateVisibleMarkers()
 
         });
-    }, [map]);
+
+    }, [articles]);
 
     useEffect(() => {
-        if(selectedMarker){
+        if (selectedMarker) {
             selectArticle(selectedMarker)
         }
 
     }, [selectedMarker]);
 
-    const selectArticle = (article: Article, notifyParent=false) => {
+    const selectArticle = (article: Article, notifyParent = false) => {
         setActiveMarker(article)
         map.setView(new LatLng(article.position[0], article.position[1]), 10, {duration: 0.5, animate: true})
-        if(notifyParent){
+        if (notifyParent) {
             notifyParentOnMarkerSelection(article)
         }
     }
@@ -53,7 +59,7 @@ function NewsMap({articles, selectedMarker, notifyParentOnMarkerSelection, onMap
     const updateVisibleMarkers = () => {
         const bounds = map.getBounds()
         const newArticles = []
-        for (const article of articles) {
+        for (const article of allArticles) {
             if (bounds.contains(new LatLng(article.position[0], article.position[1]))) {
                 newArticles.push(article)
             }
@@ -71,11 +77,15 @@ function NewsMap({articles, selectedMarker, notifyParentOnMarkerSelection, onMap
                     isActive={article.id === activeMarker?.id}/>)}
         </>
     )
-
 }
 
-
 export default function Map({articles, selectedMarker, notifyParentOnMarkerSelection, onMapSectionChanged}: MapProps) {
+
+    const [displayedArticles, setArticles] = useState<Article[]>(articles)
+
+    useEffect(() => {
+        setArticles(articles)
+    }, [articles]);
 
     return (
         <>
@@ -89,7 +99,8 @@ export default function Map({articles, selectedMarker, notifyParentOnMarkerSelec
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-                <NewsMap onMapSectionChanged={onMapSectionChanged} articles={articles} selectedMarker={selectedMarker} notifyParentOnMarkerSelection={notifyParentOnMarkerSelection}/>
+                <NewsMap onMapSectionChanged={onMapSectionChanged} articles={displayedArticles}
+                         selectedMarker={selectedMarker} notifyParentOnMarkerSelection={notifyParentOnMarkerSelection}/>
             </MapContainer>
 
         </>

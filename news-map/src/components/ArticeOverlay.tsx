@@ -15,7 +15,6 @@ export function ArticeOverlay({defaultArticle,}: Props) {
 
     useEffect(() => {
         setVisible(defaultArticle !== undefined)
-        console.log(defaultArticle !== undefined)
         setArticle(defaultArticle)
     }, [defaultArticle]);
 

@@ -14,3 +14,9 @@ build
 **.egg-info/
 db_data/
 news_data/
+news-datapublisher/node_modules
+news-map/node_modules
+news-location-nlp/node_modules
+news-location-parser/node_modules
+
+node_modules
