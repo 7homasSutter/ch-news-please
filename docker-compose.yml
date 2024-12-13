@@ -50,6 +50,21 @@ services:
     env_file:
       - .env
 
+  news-publisher:
+    build: ./news-datapublisher
+    container_name: newsPublisher
+    depends_on:
+      - redis
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+    links:
+      - redis
+    restart: on-failure
+    env_file:
+      - .env
+
   redis:
     image: redis:latest
     container_name: redis_instance
