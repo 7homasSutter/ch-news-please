@@ -1,7 +1,6 @@
 import {createClient} from 'redis'
 import * as readline from "node:readline";
 import dotenv from 'dotenv';
-import path from "path";
 import fs from "fs";
 import {sleep} from "../utils/utils.js";
 
@@ -29,15 +28,6 @@ export async function connectRedis() {
         }
 
     }
-}
-
-
-export const getOrCreateBasePathForLocationData = () => {
-    const dir = path.join(__dirname, '..', '..', 'data')
-    if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, {recursive: true})
-    }
-    return dir
 }
 
 

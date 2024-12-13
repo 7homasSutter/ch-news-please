@@ -21,39 +21,48 @@ client.connect()
 const placeHolderGenerator = new Placeholder()
 
 export async function getAllDistinctNewspapers(){
-    const query = "select source_domain from currentversions c group by source_domain"
-    const result = await loadDataFromDb(query, [])
+   const query = new Query()
+   query
+       .setSelect("source_domain")
+       .setGroupBy("source_domain")
+       .setNoLimit(true)
+
+    const result = await loadDataFromDb(buildSQLStatement(query), query.values)
     return result.map(entry => entry.source_domain)
 }
 
 export async function getArticlesByQuery(filterQuery) {
     placeHolderGenerator.init()
     const query = new Query()
+
+    query.setSelect(`${TABLE_ALIAS_ARTICLES}.id`, "title", "maintext", "source_domain", "geo", "location")
+        .setOrderBy("date_publish")
+
     for (const [key, value] of Object.entries(filterQuery)) {
         if (key === 'keywords') {
-            query.addQueryPart(buildWhereForKeywords, value)
+            query.setWhereWithBuilder(buildWhereForKeywords, value)
             query.setJoinKeywords(true)
         }
-        if (key === 'notOlder') {
-            query.addQueryPart(buildWhereForDayLimitPast, value)
+        if (key === 'maxAge') {
+            query.setWhereWithBuilder(buildWhereForDayLimitPast, value)
         }
         if (key === 'limit') {
             query.setLimit(value)
         }
         if (key === 'newspapers') {
-            query.addQueryPart(buildWhereNewspaper, value)
+            query.setWhereWithBuilder(buildWhereNewspaper, value)
         }
     }
 
     const sqlQuery = buildSQLStatement(query)
-    console.log(sqlQuery)
     return await loadDataFromDb(sqlQuery, query.values)
 
 }
 
 function buildWhereForKeywords(keywords) {
-    const values = keywords.split("-").map(keyword => `%${keyword}%`)
-    const placeholders = values.map(keyword => placeHolderGenerator.getNext())
+    const SUFFIX_COMMA = ','
+    const values = keywords.split("-").map(keyword => `%${keyword}${SUFFIX_COMMA}%`)
+    const placeholders = values.map(_ => placeHolderGenerator.getNext())
     return {
         queryParts: placeholders.map((placeholder) => `UPPER(${TABLE_ALIAS_KEYWORDS}.keywords) like UPPER(${placeholder})`),
         values: values
@@ -65,21 +74,22 @@ function buildWhereForDayLimitPast(dayLimit) {
         return false
     }
     return {
-        queryParts: [`${TABLE_ALIAS_ARTICLES}.date_publish < now() - (${placeHolderGenerator.getNext()}||' days')::interval `],
+        queryParts: [`${TABLE_ALIAS_ARTICLES}.date_publish > now() - (${placeHolderGenerator.getNext()}||' days')::interval `],
         values: [dayLimit]
     }
 }
 
 function buildWhereNewspaper(newspapers) {
-    const list = newspapers.split("-").join(", ")
+    const list = newspapers.split("-")
+    const placeholders = newspapers.split("-").map((_) => placeHolderGenerator.getNext()).join(", ")
     return {
-        queryParts: [`${TABLE_ALIAS_ARTICLES}.source_domain in (${placeHolderGenerator.getNext()})`],
-        values: [list]
+        queryParts: [`${TABLE_ALIAS_ARTICLES}.source_domain in (${placeholders})`],
+        values: list
     }
 }
 
 function buildSQLStatement(query) {
-    let select = `select distinct ${TABLE_ALIAS_ARTICLES}.id, title, maintext, source_domain, geo, location`
+    let select = query.getSelect()
     if (query.joinKeywords) {
         select = `${select}, keywords`
     }
@@ -89,10 +99,11 @@ function buildSQLStatement(query) {
         join = `${join} join keywords ${TABLE_ALIAS_KEYWORDS} on ${TABLE_ALIAS_ARTICLES}.id = ${TABLE_ALIAS_KEYWORDS}.document_id`
     }
 
-    return `${select} ${from} ${join} ${query.getWhere()} ${query.getLimitString()}`
+    return `${select} ${from} ${join} ${query.getWhere()} ${query.getGroupBy()} ${query.getOrderBy()} ${query.getLimitString()} `
 }
 
 async function loadDataFromDb(sqlQuery, values) {
+    console.log(sqlQuery, values)
     const res = await client.query(sqlQuery, values)
     return res.rows
 }
