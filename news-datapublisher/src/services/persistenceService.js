@@ -1,7 +1,10 @@
 import pkg from "pg"
-
 const {Client} = pkg
 import dotenv from 'dotenv'
+
+import {TABLE_ALIAS_ARTICLES, TABLE_ALIAS_KEYWORDS, TABLE_ALIAS_LOCATION} from "../utils/utils.js";
+import {Placeholder} from "../utils/Placeholder.js";
+import {Query} from "../utils/Query.js";
 
 dotenv.config()
 
@@ -13,75 +16,15 @@ const client = new Client({
     port: 5432
 })
 
-const TABLE_ALIAS_KEYWORDS = 'k'
-const TABLE_ALIAS_ARTICLES = 'a'
-const TABLE_ALIAS_LOCATION = 'l'
-
 
 client.connect()
-
-class Placeholder {
-
-    next = 1
-
-    init() {
-        this.next = 1
-    }
-
-    getNext() {
-        return `$${this.next++}`
-    }
-}
-
-class Query {
-    queries = []
-    values = []
-    joinKeywords = false
-    limit = 1000
-
-    constructor() {
-        this.queries.push(
-            `${TABLE_ALIAS_LOCATION}.geo is not null`,
-            `${TABLE_ALIAS_LOCATION}.geo != 'Unknown'`)
-    }
-
-    addQueryPart(builder, value) {
-        const result = builder(value)
-        if (!result) {
-            return
-        }
-        this.queries.push(...result.queryParts)
-        this.values.push(...result.values)
-    }
-
-    setJoinKeywords(joinKeywords) {
-        this.joinKeywords = joinKeywords
-    }
-
-    setLimit(limit) {
-        if (isNaN(limit)) {
-            return //use default value
-        }
-        if (limit > 5000) {
-            this.limit = 5000
-        }
-
-        if (limit < 1) {
-            this.limit = 1
-        }
-        this.limit = limit
-    }
-
-    getLimitString(){
-        return `LIMIT ${this.limit}`
-    }
-
-    getWhere(){
-        return `where ${this.queries.join(" and ")}`
-    }
-}
 const placeHolderGenerator = new Placeholder()
 
+export async function getAllDistinctNewspapers(){
+    const query = "select source_domain from currentversions c group by source_domain"
+    const result = await loadDataFromDb(query, [])
+    return result.map(entry => entry.source_domain)
+}
 
 export async function getArticlesByQuery(filterQuery) {
     placeHolderGenerator.init()
@@ -104,7 +47,7 @@ export async function getArticlesByQuery(filterQuery) {
 
     const sqlQuery = buildSQLStatement(query)
     console.log(sqlQuery)
-    return await loadArticlesFromDb(sqlQuery, query.values)
+    return await loadDataFromDb(sqlQuery, query.values)
 
 }
 
@@ -149,7 +92,7 @@ function buildSQLStatement(query) {
     return `${select} ${from} ${join} ${query.getWhere()} ${query.getLimitString()}`
 }
 
-async function loadArticlesFromDb(sqlQuery, values) {
+async function loadDataFromDb(sqlQuery, values) {
     const res = await client.query(sqlQuery, values)
     return res.rows
 }

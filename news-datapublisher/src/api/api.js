@@ -1,5 +1,5 @@
-import {getArticlesByQuery} from "./persistenceService.js";
-import {improveLocation} from "./locationService.js";
+import {getAllDistinctNewspapers, getArticlesByQuery} from "../services/persistenceService.js";
+import {improveLocation} from "../services/locationService.js";
 
 export async function getAllLocationArticles(ctx) {
     try {
@@ -13,10 +13,18 @@ export async function getAllLocationArticles(ctx) {
     } catch (error) {
         console.log(error)
         ctx.status = 500
-        ctx.body = error
+        ctx.body = []
     }
+}
 
-
+export async function getAllNewspapers(ctx){
+    try {
+        ctx.body = await getAllDistinctNewspapers()
+    }catch (error) {
+        console.log(error)
+        ctx.status = 500
+        ctx.body = []
+    }
 }
 
 

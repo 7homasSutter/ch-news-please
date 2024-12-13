@@ -1,7 +1,7 @@
 import Koa from 'koa'
 import cors from "@koa/cors"
-import {router} from "./routes.js";
-import {connectRedis, initializeData} from "./redisService.js";
+import {router} from "./api/routes.js";
+import {connectRedis, initializeData} from "./services/redisService.js";
 
 const app = new Koa()
 app.use(cors())

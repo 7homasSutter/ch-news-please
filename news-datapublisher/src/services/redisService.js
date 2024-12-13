@@ -3,7 +3,7 @@ import * as readline from "node:readline";
 import dotenv from 'dotenv';
 import path from "path";
 import fs from "fs";
-import {sleep} from "./utils.js";
+import {sleep} from "../utils/utils.js";
 
 dotenv.config();
 
