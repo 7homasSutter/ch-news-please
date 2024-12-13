@@ -4,7 +4,8 @@ export type Article = {
     text: string,
     newspaper: string
     position: number[],
-    location: string
+    location: string,
+    keywords?: string
 }
 
 export type ArticleResponse = {
@@ -16,4 +17,17 @@ export type ArticleResponse = {
 export type ErrorMessageProps = {
     error: boolean | null
     message: string
+}
+
+export type NewspaperResponse = {
+    newspapers: string[]
+    success: boolean
+    message: string
+}
+
+export type FilterData = {
+    limit: number,
+    newspapers: string[],
+    keywords: string[],
+    maxAge: number
 }

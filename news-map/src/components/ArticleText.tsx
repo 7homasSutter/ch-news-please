@@ -26,6 +26,7 @@ function ArticleText({article}: Props){
     return (
         <div>
             <div style={{fontStyle: "italic"}}>{article?.location.split(",").filter((location) => filterLocation(location)).join(", ")}</div>
+            {article?.keywords && <div style={{fontStyle: "italic"}}>Keywords: {article?.keywords}</div>}
             {article?.text.split("\n").map((paragraph: string) => toParagraph(paragraph, isSubtitle(paragraph)))}
 
         </div>

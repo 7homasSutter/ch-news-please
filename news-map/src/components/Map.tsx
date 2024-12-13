@@ -14,7 +14,6 @@ interface MapProps {
 }
 
 function NewsMap({articles, selectedMarker, notifyParentOnMarkerSelection, onMapSectionChanged}: MapProps) {
-    const [allArticles, setAlLArticles] = useState<Article[]>(articles)
     const [visibleArticles, setVisibleArticles] = useState<Article[]>([]);
     const [activeMarker, setActiveMarker] = useState<Article | undefined>(selectedMarker)
 
@@ -24,19 +23,17 @@ function NewsMap({articles, selectedMarker, notifyParentOnMarkerSelection, onMap
         if (articles.length === 0) {
             return
         }
-        setAlLArticles(articles)
-        updateVisibleMarkers()
+        updateVisibleMarkers(articles)
 
         if(!map){
             return
         }
 
         map.on('move', function () {
-            updateVisibleMarkers()
+            updateVisibleMarkers(articles)
         })
         map.on('zoomend', function () {
-            updateVisibleMarkers()
-
+            updateVisibleMarkers(articles)
         });
 
     }, [articles]);
@@ -56,10 +53,10 @@ function NewsMap({articles, selectedMarker, notifyParentOnMarkerSelection, onMap
         }
     }
 
-    const updateVisibleMarkers = () => {
+    const updateVisibleMarkers = (availableArticles: Article[]) => {
         const bounds = map.getBounds()
         const newArticles = []
-        for (const article of allArticles) {
+        for (const article of availableArticles) {
             if (bounds.contains(new LatLng(article.position[0], article.position[1]))) {
                 newArticles.push(article)
             }

@@ -31,6 +31,21 @@
   max-width: 28vw;
 }
 
+@media (max-width: 900px ){
+
+  .sideOverlay{
+    top: 40px;
+    width: 90vw;
+    bottom: 220px;
+  }
+
+  .sideOverlayScrollArea{
+    top: 80px;
+    max-width: 85vw;
+    bottom: 220px;
+  }
+}
+
 .topOverlayFilterPanel {
   pointer-events: all;
   position: fixed;
@@ -43,7 +58,6 @@
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 15px;
-
 }
 
 .filterSettings {
@@ -54,6 +68,12 @@
 
 }
 
+.loadingCenter {
+  z-index: 1000;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+}
 
 .hoverable {
   display: inline-block; /* Adjust to your layout needs */
