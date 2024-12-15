@@ -4,7 +4,9 @@ import {router} from "./api/routes.js";
 import {connectRedis, initializeData} from "./services/redisService.js";
 
 const app = new Koa()
-app.use(cors())
+app.use(cors({
+    origin: 'https://map.dariok.ch'
+}))
 app.use(router.routes())
 app.use(router.allowedMethods())
 
