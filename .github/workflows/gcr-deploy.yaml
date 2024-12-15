@@ -17,6 +17,9 @@ env:
   ARTIFACT_NAME: news-map
   SERVICE: news-map
 
+  API_HOST: 127.0.0.1
+  API_PORT: 3000
+
 jobs:
   docker-release:
     name: Tagged Docker release to Google Artifact Registry
@@ -63,8 +66,8 @@ jobs:
              ${{env.REGION_REPO}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.ARTIFACT_NAME}}:${{ steps.get-tag.outputs.short_ref }}
              ${{env.REGION_REPO}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.ARTIFACT_NAME}}:latest
           build-args: |
-            REACT_APP_ENV=${{env.ENVIRONMENT}}
-            REACT_APP_DATABASE_NAME=${{env.DATABASE_NAME}}
+            REACT_APP_API_HOST=${{env.API_HOST}}
+            REACT_APP_API_PORT=${{env.API_PORT}}
 
     # Deploy the latest image to Google Cloud Run
       - name: Deploy to Google Cloud Run

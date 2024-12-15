@@ -1,7 +1,8 @@
 import {NewspaperResponse} from "../../types";
+import {baseURL} from "./urlConfig.ts";
 
 class NewspaperService{
-    URL: string = "http://localhost:3000"
+    URL: string = baseURL
     async get(): Promise<NewspaperResponse>{
         let newspaperResponse: NewspaperResponse = {success: false, message: '', newspapers: []}
         try {

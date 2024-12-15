@@ -1,7 +1,8 @@
 import {ArticleResponse} from "../../types";
+import {baseURL} from "./urlConfig.ts";
 
 class ArticleService{
-    URL: string = "http://localhost:3000"
+    URL: string = baseURL
     async get(filter: string): Promise<ArticleResponse>{
         let articleResponse: ArticleResponse = {success: false, message: '', articles: []}
         try {

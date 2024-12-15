@@ -20,3 +20,6 @@ To run the project, follow these steps:
 The crawler will start crawling the website and will write the data to the database and the local 
 directory `news_data`.
 
+## Sources
+The world city list is provided by https://simplemaps.com/data/world-cities.
+https://creativecommons.org/licenses/by/4.0/
