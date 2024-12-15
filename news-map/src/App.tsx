@@ -20,8 +20,8 @@ function App() {
         maxAge: 100
     }
 
-    const {getNewspapers, newspaperErrorProps, newsPapersAreLoading} = useNewspapers()
-    const {getArticles, errorMessageProps, isLoading} = useArticles()
+    const {getNewspapers } = useNewspapers()
+    const {getArticles, isLoading} = useArticles()
 
     const [articles, setArticles] = useState<Article[]>([])
     const [allNewspapers, setNewspapers] = useState<string[]>([])
