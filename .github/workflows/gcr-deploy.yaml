@@ -66,8 +66,8 @@ jobs:
              ${{env.REGION_REPO}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.ARTIFACT_NAME}}:${{ steps.get-tag.outputs.short_ref }}
              ${{env.REGION_REPO}}-docker.pkg.dev/${{env.PROJECT_ID}}/${{env.REPOSITORY}}/${{env.ARTIFACT_NAME}}:latest
           build-args: |
-            REACT_APP_API_HOST=${{env.API_HOST}}
-            REACT_APP_API_PORT=${{env.API_PORT}}
+            VITE_API_HOST=${{env.API_HOST}}
+            VITE_API_PORT=${{env.API_PORT}}
 
     # Deploy the latest image to Google Cloud Run
       - name: Deploy to Google Cloud Run
