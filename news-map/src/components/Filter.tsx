@@ -3,7 +3,7 @@ import {useDisclosure} from '@mantine/hooks';
 import {Button, Chip, Modal, NumberInput, Pill, PillsInput} from '@mantine/core';
 import {isInRange, useForm} from "@mantine/form";
 import {FilterData} from "../types";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 
 interface Props {
     onFilterChanged: (data: FilterData) => void
@@ -19,14 +19,15 @@ function Filter({onFilterChanged, defaultFilter, newspapers}: Props) {
         mode: "uncontrolled",
         initialValues: {...defaultFilter},
         validate: {
+            // @ts-ignore
             maxAge: isInRange({min: 1, max: 100_000}, "Please enter a value between 1 and 100'000"),
+            // @ts-ignore
             limit: isInRange({min: 1, max: 5000}, "Please enter a value between 1 and 5000")
         }
     })
 
     useEffect(() => {
         if (defaultFilter) {
-            console.log(defaultFilter)
             form.setValues(defaultFilter)
         }
     }, [defaultFilter]);
@@ -42,7 +43,7 @@ function Filter({onFilterChanged, defaultFilter, newspapers}: Props) {
         form.setFieldValue("keywords", pills)
     }
 
-    const addKeyword = (event) => {
+    const addKeyword = (event: React.FocusEvent<HTMLInputElement>) => {
         const value = event.target.value
         if (!value) {
             return
