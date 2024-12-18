@@ -17,7 +17,7 @@ env:
   ARTIFACT_NAME: news-map
   SERVICE: news-map
 
-  API_HOST: 160.85.255.141
+  API_HOST: newsmap.dariok.ch
   API_PORT: 3000
 
 jobs:
