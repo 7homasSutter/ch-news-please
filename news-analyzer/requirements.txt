@@ -1,0 +1,9 @@
+argparse
+logging
+time
+concurrent.futures
+sqlalchemy
+pandas
+ollama
+tqdm
+psycopg2

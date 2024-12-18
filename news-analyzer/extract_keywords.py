@@ -115,6 +115,7 @@ def main():
                 for index, row in tqdm(df.iterrows(), total=len(df), desc="Processing documents"):
                     has_error = process_row(row, connection)
         else:
+            logging.info(f"Processing documents concurrently (multi-threaded) with offset: {offset} and batch size: {batch_size}")
             with engine.connect() as connection:
                 with ThreadPoolExecutor(max_workers=10) as executor:
                     futures = [executor.submit(process_row, row, connection) for index, row in df.iterrows()]
