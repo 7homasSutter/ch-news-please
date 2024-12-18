@@ -6,7 +6,6 @@ class ArticleService{
     async get(filter: string): Promise<ArticleResponse>{
         let articleResponse: ArticleResponse = {success: false, message: '', articles: []}
         try {
-            console.log(`${this.URL}/articles${filter}`)
             const response: Response = await fetch(`${this.URL}/articles${filter}`, {
                 method: 'GET',
                 headers: {'Content-Type': 'application/json'}
