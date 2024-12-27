@@ -1,7 +1,8 @@
+
 services:
   postgres:
     image: postgres:latest
-    platform: linux/amd64
+    #platform: linux/amd64
     env_file:
       - .env
     environment:
@@ -20,18 +21,18 @@ services:
       interval: 30s
       timeout: 10s
       retries: 5
-    restart: always
+    restart: on-failure
 
   news-please:
     build: .
-    platform: linux/amd64
+    #platform: linux/amd64
     depends_on:
       - postgres
     volumes:
       - ./db_data/news_data:/root/news-please-repo/data
     networks:
       - backend
-    restart: always
+    restart: on-failure
 
   news-location-parser:
     build: ./news-location-parser
@@ -46,9 +47,27 @@ services:
       - backend
     links:
       - redis
-    restart: always
+    restart: on-failure
     env_file:
       - .env
+
+  news-publisher:
+    build: ./news-datapublisher
+    container_name: newsPublisher
+    depends_on:
+      - redis
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+    links:
+      - redis
+    restart: on-failure
+    env_file:
+      - .env
+    volumes:
+      - /etc/letsencrypt/live/newsmap.dariok.ch/fullchain.pem:/etc/letsencrypt/live/newsmap.dariok.ch/fullchain.pem
+      - /etc/letsencrypt/live/newsmap.dariok.ch/privkey.pem:/etc/letsencrypt/live/newsmap.dariok.ch/privkey.pem
 
   redis:
     image: redis:latest
