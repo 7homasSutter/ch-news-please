@@ -61,9 +61,9 @@ def process_row(row, connection, google_api_key, max_retries=1, retry_delay=1):
         return has_error
     while retries < max_retries:
         try:
-            geo_location = fetch_geolocation(location_txt, google_api_key)
-            if not geo_location:
-                geo_location = 'Unknown'
+            #geo_location = fetch_geolocation(location_txt, google_api_key)
+            #if not geo_location:
+            geo_location = 'Unknown'
             logging.info(f"Extracted location for document {row['id']} {location_txt} geo: {geo_location}")
             insert_stmt = location_table.insert().values(document_id=row['id'], location=location_txt, geo=geo_location)
             connection.execute(insert_stmt)
